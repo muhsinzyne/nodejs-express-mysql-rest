@@ -9,8 +9,17 @@ const sequelize = new Sequelize({
   username: config.dbUser,
   password: config.dbPassword,
   database: config.dbName,
-  models: [path.join(__dirname, '../models')], // Path to your models folder
+  models: [path.resolve(__dirname, '../../src/models/*.ts')], // Use a glob pattern
   logging: false, // Disable SQL query logging for production
 });
+
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('sequelize Connection established successfully.');
+  })
+  .catch((err) => {
+    console.error('sequelize Unable to connect to the database:', err);
+  });
 
 export default sequelize;

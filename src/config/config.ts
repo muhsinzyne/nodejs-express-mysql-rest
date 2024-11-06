@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 
-dotenv.config();
+const envFile = `.env.${process.env.NODE_ENV || 'local'}`;
+dotenv.config({ path: envFile });
 
 export default {
   dbHost: process.env.DB_HOST || '127.0.0.1',

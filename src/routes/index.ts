@@ -1,8 +1,10 @@
-import { Router } from "express";
-import { getExample } from "../controllers/exampleController";
+import { Router } from 'express';
+import { adapter, getExample, typeOrm } from '../controllers/exampleController';
 
 const apiRoute = Router();
 
-apiRoute.get("/example", getExample);
+apiRoute.get('/mysql', getExample);
+apiRoute.get('/adapter', adapter);
+apiRoute.get('/typeorm', typeOrm);
 
 export default apiRoute;

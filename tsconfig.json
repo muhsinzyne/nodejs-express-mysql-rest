@@ -13,7 +13,7 @@
       "typeRoots": ["./node_modules/@types"], // Ensures TypeScript knows where to find type definitions
       "moduleResolution": "node" // Helps with resolving Node-style module imports
     },
-    "include": ["src/**/*", "src/migrations/**/*"], // Ensures all TypeScript files in the src folder are compiled
+    "include": ["src/**/*.ts", "src/migrations/**/*"], // Ensures all TypeScript files in the src folder are compiled
     "exclude": ["node_modules", "dist", "scripts/*"] // Prevents node_modules and output folder from being compiled
   }
   
