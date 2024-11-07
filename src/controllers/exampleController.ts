@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import pool from '../config/database';
 import { AppDataSource } from '../config/data-source';
-import { User } from '../typeorm/models/User';
+// import { User } from '../typeorm/models/User';
 
 import emailQueue from '../message-broker/queues/EmailQueue';
 
@@ -37,10 +37,12 @@ export const adapter = async (req: Request, res: Response) => {
     //   return Promise.resolve();
     // });
 
-    const userRepository = AppDataSource.getRepository(User);
-    const data = await userRepository.find();
+    // const userRepository = AppDataSource.getRepository(User);
+    // const data = await userRepository.find();
 
-    res.json(data);
+    // res.json(data);
+
+    res.status(500).json({ message: 'Error retrieving data' });
   } catch (error) {
     res.status(500).json({ message: 'Error retrieving data', error });
   }

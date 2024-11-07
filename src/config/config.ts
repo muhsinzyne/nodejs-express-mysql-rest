@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 const envFile = `.env.${process.env.NODE_ENV || 'local'}`;
 dotenv.config({ path: envFile });
 
+console.log('loading app key!!');
+
 export default {
   dbHost: process.env.DB_HOST || '127.0.0.1',
   dbUser: process.env.DB_USER || 'demo_user',
@@ -13,4 +15,5 @@ export default {
   port: Number(process.env.PORT) || 3000,
   redisHost: process.env.REDIS_HOST || '127.0.0.1',
   redisPort: Number(process.env.REDIS_PORT) || 6379,
+  appKey: process.env.APP_KEY || 'test_key',
 };

@@ -22,7 +22,7 @@ console.log(`Migration file will be generated at: ${migrationFilePath}`);
 console.log(`Migration file will be: ${migrationName}`);
 
 // Run the TypeORM generate migration command
-const generateMigrationCommand = `npm run migration:generate ${migrationFilePath}`;
+const generateMigrationCommand = `npm run migration:generate -n ${migrationFilePath}`;
 
 console.log(generateMigrationCommand);
 
