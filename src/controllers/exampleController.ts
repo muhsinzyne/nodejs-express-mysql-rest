@@ -1,10 +1,9 @@
 import { Request, Response } from 'express';
 import pool from '../config/database';
+import { AppDataSource } from '../config/data-source';
+import { User } from '../typeorm/models/User';
 
-import { User } from '../models/User';
-import sequelize from '../config/sequelize';
-import { AppDataSource } from '../config/db-adapter/type-orm';
-import { User as User2 } from '../orm-models/typeorm/User';
+import emailQueue from '../message-broker/queues/EmailQueue';
 
 export const getExample = async (req: Request, res: Response) => {
   try {
@@ -17,25 +16,40 @@ export const getExample = async (req: Request, res: Response) => {
 
 export const adapter = async (req: Request, res: Response) => {
   try {
-    await sequelize.sync();
-    const users = await User.findAll();
+    console.log('Test!!!!');
 
-    res.json(users);
+    addEmailJob();
+
+    // const myQueue = BullMQConfig.createQueue('testABC');
+
+    // await myQueue.add('my-job', { foo: 'bar' }, { delay: 10000 });
+    // await myQueue.add('my-job', { foo: 'bar' }, { delay: 10000 });
+    // await myQueue.add('my-job', { foo: 'bar' }, { delay: 10000 });
+    // await myQueue.add('my-job', { foo: 'bar' }, { delay: 10000 });
+    // await myQueue.add('my-job', { foo: 'bar' }, { delay: 10000 });
+    // await myQueue.add('my-job', { foo: 'bar' }, { delay: 10000 });
+    // await myQueue.add('my-job', { foo: 'bar' }, { delay: 10000 });
+
+    // // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // const myWorker = BullMQConfig.createWorker('testABC', async (job) => {
+    //   //console.log('Processing job', job.id, job.data);
+    //   // Process the job here
+    //   return Promise.resolve();
+    // });
+
+    const userRepository = AppDataSource.getRepository(User);
+    const data = await userRepository.find();
+
+    res.json(data);
   } catch (error) {
     res.status(500).json({ message: 'Error retrieving data', error });
   }
 };
 
-export const typeOrm = async (req: Request, res: Response) => {
-  try {
-    await AppDataSource.initialize();
-    const userRepository = AppDataSource.getRepository(User2);
-
-    console.log(userRepository); // Should log the User entity
-
-    const users = await userRepository.find();
-    res.json(users);
-  } catch (error) {
-    res.status(500).json({ message: 'Error retrieving data', error });
-  }
+const addEmailJob = async () => {
+  await emailQueue.add('sendEmail', {
+    to: 'user@example.com',
+    subject: 'Welcome to our platform!',
+    body: 'Thank you for signing up.',
+  });
 };
