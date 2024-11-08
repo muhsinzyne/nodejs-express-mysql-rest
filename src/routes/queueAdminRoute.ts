@@ -1,6 +1,6 @@
 import { Express } from 'express';
 import session from 'express-session';
-import { isAuthenticated } from '../middlewares/authMiddleware';
+import { queueIsSecuredWithAuth } from '../middlewares/queueDashboardAuth';
 import passport from '../config/passport-config'; // Adjust the import path based on your folder structure
 import config from './../config/config';
 import QueueManager from '../message-broker/QueueManager';
@@ -65,7 +65,7 @@ export default function setupRoutes(app: Express) {
 
   app.use(
     AppRouteValues.QUEUE_DASH_BASE,
-    isAuthenticated,
+    queueIsSecuredWithAuth,
     serverAdapter.getRouter()
   ); // Access the UI at /admin/queues
 }
