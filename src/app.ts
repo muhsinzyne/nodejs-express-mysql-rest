@@ -9,11 +9,12 @@ const envFile = `.env.${process.env.NODE_ENV || 'local'}`;
 dotenv.config({ path: envFile });
 
 // Log current environment
-console.log(`Running in ${process.env.NODE_ENV || 'local'} mode`);
+console.log(
+  `Running in ======${process.env.NODE_ENV || 'local'} mode ========`
+);
 
 // Initialize Express app
 const app = express();
-
 // Middleware to parse JSON and URL-encoded data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

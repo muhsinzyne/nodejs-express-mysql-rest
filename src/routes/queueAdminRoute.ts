@@ -8,12 +8,13 @@ import { createBullBoard } from '@bull-board/api';
 import { ExpressAdapter } from '@bull-board/express';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import flash from 'connect-flash';
+import { AppRouteValues } from '../constants/AppRouteValues';
+import { AppViewValues } from '../constants/AppViewValues';
 
 export default function setupRoutes(app: Express) {
   app.use(flash());
 
   // queue admin dashboard route URL
-  const adminQueue = '/admin/queue-dashboard';
   app.use(
     session({
       secret: config.appKey, // Change to a secret key
@@ -24,36 +25,36 @@ export default function setupRoutes(app: Express) {
   app.use(passport.initialize());
   app.use(passport.session());
   app.post(
-    '/admin/queue-dashboard/login',
+    AppRouteValues.QUEUE_DASH_LOGIN,
     passport.authenticate('local', {
-      successRedirect: adminQueue,
-      failureRedirect: '/admin/queue-dashboard/login',
+      successRedirect: AppRouteValues.QUEUE_DASH_BASE,
+      failureRedirect: AppRouteValues.QUEUE_DASH_LOGIN,
       failureFlash: true, // Optional, can be used to send messages
     })
   );
 
-  app.get('/admin/queue-dashboard/login', (req, res) => {
+  app.get(AppRouteValues.QUEUE_DASH_LOGIN, (req, res) => {
     if (req.isAuthenticated()) {
-      return res.redirect(adminQueue);
+      return res.redirect(AppRouteValues.QUEUE_DASH_BASE);
     }
     // Pass the flash message (if any) to the login template
     const message = req.flash('error'); // You can name this flash message whatever you like
-    res.render('admin/queue-dashboard/login', { message: message[0] }); // If no message, it will be undefined
+    res.render(AppViewValues.QUEUE_DASH_LOGIN_PAGE, { message: message[0] }); // If no message, it will be undefined
   });
 
-  app.get('/admin/queue-dashboard/logout', (req, res) => {
+  app.get(AppRouteValues.QUEUE_DASH_LOGOUT, (req, res) => {
     req.logout((err: Error | null) => {
       if (err) {
         console.error(err);
         return res.status(500).send('Failed to log out');
       }
-      res.redirect('/admin/queue-dashboard/login');
+      res.redirect(AppRouteValues.QUEUE_DASH_LOGIN);
     });
   });
 
   QueueManager.initQueues();
   const serverAdapter = new ExpressAdapter();
-  serverAdapter.setBasePath(adminQueue);
+  serverAdapter.setBasePath(AppRouteValues.QUEUE_DASH_BASE);
   const bullQueues = Object.values(QueueManager.getQueues()).map(
     (queue) => new BullMQAdapter(queue)
   );
@@ -62,5 +63,9 @@ export default function setupRoutes(app: Express) {
     serverAdapter: serverAdapter,
   });
 
-  app.use(adminQueue, isAuthenticated, serverAdapter.getRouter()); // Access the UI at /admin/queues
+  app.use(
+    AppRouteValues.QUEUE_DASH_BASE,
+    isAuthenticated,
+    serverAdapter.getRouter()
+  ); // Access the UI at /admin/queues
 }

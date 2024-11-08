@@ -9,10 +9,11 @@ import {
   orderDeliveredProcessor,
 } from './processors';
 
+import config from '../config/config';
 // Define Redis connection options
 const redisOptions: RedisOptions = {
-  host: '127.0.0.1', // Redis host
-  port: 6379, // Redis port
+  host: config.redisHost,
+  port: config.redisPort,
 };
 
 class QueueManager {
