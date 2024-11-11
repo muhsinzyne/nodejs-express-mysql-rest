@@ -1,9 +1,10 @@
 import { Express } from 'express';
+import { StatusCodes } from '../constants/StatusCodes';
 export default function setErrors(app: Express) {
   app.use((req, res) => {
-    res.status(404).json({
+    res.status(StatusCodes.HTTP_NOT_FOUND).json({
       message: `Cannot GET ${req.originalUrl}`,
-      status: 404,
+      status: StatusCodes.HTTP_NOT_FOUND,
     });
   }); // Main API routes
 }

@@ -12,7 +12,7 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  synchronize: true, // Set to false in production
+  synchronize: false, // Set to false in production
   logging: false,
   entities: ['src/typeorm/models/**/*.ts'], // Path to your entity files
   migrations: ['src/typeorm/migrations/**/*.ts'], // Path to your migration files

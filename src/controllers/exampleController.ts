@@ -4,9 +4,24 @@ import { AppDataSource } from '../config/data-source';
 // import { User } from '../typeorm/models/User';
 
 import emailQueue from '../message-broker/queues/EmailQueue';
+import { RequestBody } from '../types/request-body.interface';
+import { StatusCodes } from '../constants/StatusCodes';
 
 export const getExample = async (req: Request, res: Response) => {
   try {
+    const requiredFields: string[] = ['test1', 'test2'];
+    const fields: RequestBody = req.body;
+    // Check for missing required fields using Object.prototype.hasOwnProperty.call()
+    const missingFields: string[] = requiredFields.filter(
+      (field) => !Object.prototype.hasOwnProperty.call(fields, field)
+    );
+
+    if (missingFields.length > 0) {
+      return res.status(StatusCodes.HTTP_BAD_REQUEST).json({
+        status: false,
+        message: `Missing required fields: ${missingFields.join(', ')}`,
+      });
+    }
     const [rows] = await pool.query('SELECT * FROM users');
     res.json(rows);
   } catch (error) {
